@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra de Rifa</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #mensagem {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Tela de conclusão */
+        #conclusao {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        #conclusao .check {
+            font-size: 60px;
+            margin-bottom: 20px;
+        }
+
+        #conclusao h2 {
+            margin-bottom: 15px;
+        }
+
+        #conclusao p {
+            line-height: 1.6;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- FORMULÁRIO -->
+    <div id="formulario">
+
+        <h2>Participar da Rifa</h2>
+
+        <p>
+            Preencha seus dados. Após a validação pelo moderador,
+            seu número será confirmado!
+        </p>
+
+        <form id="rifaForm">
+
+            <div class="form-group">
+                <label for="nome">Nome Completo:</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefone">Telefone (WhatsApp):</label>
+                <input type="tel" id="telefone" name="telefone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="obs">Vendedor e quantidade vendida:</label>
+                <textarea id="obs" name="obs" rows="3"></textarea>
+            </div>
+
+            <button type="submit" id="btnSubmit">
+                Solicitar Número
+            </button>
+
+        </form>
+
+        <div id="mensagem"></div>
+
+    </div>
+
+
+    <!-- TELA DE CONCLUSÃO -->
+    <div id="conclusao">
+
+        <div class="check">✓</div>
+
+        <h2>Solicitação enviada!</h2>
+
+        <p>
+            Obrigado por participar da nossa rifa!
+        </p>
+
+        <p>
+            Seus dados foram enviados com sucesso.
+            Aguarde a confirmação do moderador para receber
+            seu número da sorte.
+        </p>
+
+    </div>
+
+
+    <script>
+        // COLE AQUI A URL GERADA NO PASSO 1 DO GOOGLE APPS SCRIPT
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwSQDl4UzG52FazSZATxAbZsRi1jb0u4glTCEk-miwanvGhAW3CD91DLCNqWHc9JMFo/exec';
+
+        document.getElementById('rifaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('btnSubmit');
+            const msg = document.getElementById('mensagem');
+
+            btn.innerText = 'Enviando...';
+            btn.disabled = true;
+
+            const formData = new FormData(this);
+            const data = new URLSearchParams(formData);
+
+            fetch(API_URL, {
+                method: 'POST',
+                body: data
+            })
+            .then(response => response.json())
+            .then(result => {
+
+                // Esconde o formulário
+                document.getElementById('formulario').style.display = 'none';
+
+                // Mostra a tela de conclusão
+                document.getElementById('conclusao').style.display = 'block';
+
+            })
+            .catch(error => {
+
+                msg.style.color = 'red';
+                msg.innerText = 'Erro ao enviar. Tente novamente.';
+
+            })
+            .finally(() => {
+
+                btn.innerText = 'Solicitar Número';
+                btn.disabled = false;
+
+            });
+        });
+    </script>
+
+</body>
+</html>
+```
